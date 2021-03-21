@@ -3,3 +3,8 @@ _templates_suffix: .jinja
 package_name:
   type: str
   help: Name of the package
+
+_exclude:
+  - "README.md"
+  - ".git/"
+  - "copier.yaml"
