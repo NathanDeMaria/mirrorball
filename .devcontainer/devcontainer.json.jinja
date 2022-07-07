@@ -5,7 +5,7 @@
     "dockerfile": "./Dockerfile"
   },
   "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash",
+    "terminal.integrated.defaultProfile.linux": "bash",
     "editor.rulers": [
       88
     ],
@@ -32,7 +32,8 @@
   },
   "extensions": [
     "ms-python.python",
-    "ms-python.vscode-pylance"
+    "ms-python.vscode-pylance",
+    "sourcery.sourcery"
   ],
   "mounts": [
     "source=[[ package_name ]]-bashhistory,target=/commandhistory,type=volume"
