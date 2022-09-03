@@ -1,5 +1,5 @@
 {
-  "name": "[[ package_name ]]",
+  "name": "{{ package_name }}",
   "build": {
     "context": "..",
     "dockerfile": "./Dockerfile"
@@ -36,6 +36,6 @@
     "sourcery.sourcery"
   ],
   "mounts": [
-    "source=[[ package_name ]]-bashhistory,target=/commandhistory,type=volume"
+    "source={{ package_name }}-bashhistory,target=/commandhistory,type=volume"
   ]
 }
