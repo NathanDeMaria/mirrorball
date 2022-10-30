@@ -1,10 +1,11 @@
-FROM python:3.10@sha256:745efdfb7e4aac9a8422bd8c62d8bc35a693e8979a240d29677cb03e6aa91052
+# 3.11.0-bullseye on 2022-10-30
+FROM python@sha256:3e2e743ca3027c375a13ee7b9b0f7757b0091501a7556563afbc8000b5c862a5
 
 # For persisting bash history
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && echo $SNIPPET >> "/root/.bashrc"
 
 # Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.2.0
+RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.2.2
 ENV PATH /root/.local/bin:${PATH}
 
 # Is this a good way to add stuff on load?
