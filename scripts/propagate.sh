@@ -7,8 +7,8 @@
 # Each repo is cloned fresh into a scratch directory, so nothing here touches a
 # checkout you're working in. Conflicts are left inline (<<<<<<< markers) and
 # the PR opens as a draft that says so; the repo's `ci` check fails on them
-# until they're resolved, which is the point. Needs copier, uv and an
-# authenticated gh.
+# until they're resolved, which is the point. Needs copier, uv, an ssh key
+# that can push to the repos, and an authenticated gh for the PR.
 set -euo pipefail
 
 here="$(cd "$(dirname "$0")/.." && pwd)"
@@ -22,7 +22,10 @@ grep -vE '^\s*(#|$)' "$here/repos.txt" | while read -r repo subdir; do
     branch="template/$ref${subdir:+-${subdir//\//-}}"
     echo "== $repo ${subdir:-}"
 
-    gh repo clone "$repo" "$dest" -- --quiet
+    # Over ssh, not `gh repo clone`: an update that touches ci.yml needs a
+    # push GitHub only accepts from a token with the `workflow` scope, and the
+    # ssh key is what has it.
+    git clone --quiet "git@github.com:$repo.git" "$dest"
     cd "$dest"
     git checkout --quiet -b "$branch"
 
