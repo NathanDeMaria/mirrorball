@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # Named `ci` like every generated repo's check, so one ruleset fits all.
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # copier renders from git, and --vcs-ref HEAD needs the history
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.6"
+
+      - name: Install copier
+        run: uv tool install copier==9.19.1
+
+      # A library and an app, each through `make check` and `make test`
+      - name: Render and test
+        run: make test
+
+      # The devcontainer is the one template file nothing above exercises.
+      # Building it catches a bad digest or a broken install line.
+      - name: Build the devcontainer
+        run: |
+          dest="$(mktemp -d)/demo"
+          copier copy --defaults --quiet --vcs-ref HEAD \
+            --data project_name=demo --data aws=true . "$dest"
+          docker build -f "$dest/.devcontainer/Dockerfile" "$dest"

@@ -1,10 +1,104 @@
+_min_copier_version: "9.19"
+_subdirectory: template
 _templates_suffix: .jinja
+_message_after_copy: |
+  Next: `git init && uv lock`, then `make check && make test`.
 
-package_name:
+# Created once, then the project's. `copier update` leaves these alone, so a
+# repo's README, its own make targets and its package code are never touched by
+# a template change. Everything else is template-owned and merged on update --
+# including pyproject.toml, where the dependency lists are the project's and the
+# tool sections are the template's, and a three-way merge keeps both.
+_skip_if_exists:
+  - README.md
+  - project.mk
+  - "{{ module_name }}/__init__.py"
+  - "{{ module_name }}/import_test.py"
+  - .devcontainer/local.env.example
+
+project_name:
   type: str
-  help: Name of the package
+  help: Distribution name, as it appears in pyproject.toml (kebab-case)
+  validator: >-
+    {% if not (project_name | regex_search('^[a-z][a-z0-9-]*$')) %}
+    lowercase letters, digits and dashes only
+    {% endif %}
 
-_exclude:
-  - "README.md"
-  - ".git/"
-  - "copier.yaml"
+module_name:
+  type: str
+  help: Import name of the package
+  default: "{{ project_name | replace('-', '_') }}"
+
+description:
+  type: str
+  help: One line about what this is
+  default: ""
+
+kind:
+  type: str
+  help: >-
+    library: imported by other repos, so it declares the oldest Python it
+    supports. app: deploys or runs on its own, so it targets the newest.
+  choices:
+    - library
+    - app
+  default: library
+
+aws:
+  type: bool
+  help: Install the AWS CLI and mount ~/.aws into the devcontainer?
+  default: true
+
+# The versions every repo shares. `when: false` keeps them out of the answers
+# file, so they always come from the template: bumping one here and tagging is
+# how a new Python, uv or ruff reaches every repo on its next `copier update`.
+
+python_version:
+  default: "3.15"
+  when: false
+
+# The oldest Python a library still supports. One behind python_version, so a
+# library never asks its consumers for a newer interpreter than they run.
+library_min_python:
+  default: "3.14"
+  when: false
+
+# python:3.15-trixie, by the digest of the multi-platform *index* so arm64 and
+# amd64 both resolve:
+#   docker buildx imagetools inspect python:3.15-trixie
+python_image:
+  default: python@sha256:a51b0cd81c9c0fc08afc4a823843b459dc71c9386a02ccb150097b41d783f33b
+  when: false
+
+python_image_note:
+  default: 3.15.2-trixie on 2026-10-28
+  when: false
+
+uv_version:
+  default: 0.13.6
+  when: false
+
+# ghcr.io/astral-sh/uv:0.13.6, by index digest like python_image.
+uv_image:
+  default: ghcr.io/astral-sh/uv@sha256:af22a52f5eafef3d78e551599d405c02df61919d18028f0cea8eda93bc9986d0
+  when: false
+
+ruff_min:
+  default: 0.17.3
+  when: false
+
+ty_min:
+  default: 0.0.94
+  when: false
+
+pytest_min:
+  default: 9.0.2
+  when: false
+
+gh_version:
+  default: 2.97.0
+  when: false
+
+claude_version:
+  default: 2.1.235
+  when: false
