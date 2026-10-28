@@ -1,0 +1,4 @@
+# Repos that follow the template, one per line: owner/repo, then optionally
+# the subdirectory holding its .copier-answers.yml. `make propagate` runs
+# `copier update` in each one. A repo goes in here once it has adopted the
+# template.
