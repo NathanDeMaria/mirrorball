@@ -2,3 +2,4 @@
 # the subdirectory holding its .copier-answers.yml. `make propagate` runs
 # `copier update` in each one. A repo goes in here once it has adopted the
 # template.
+NathanDeMaria/the-lucky-ones
