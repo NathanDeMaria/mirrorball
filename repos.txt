@@ -10,3 +10,4 @@ NathanDeMaria/so-high-school
 NathanDeMaria/gold-rush
 NathanDeMaria/EndGame py-endgame
 NathanDeMaria/EndGame py-endgame-aws
+NathanDeMaria/aws-batch-optimization batch-core
