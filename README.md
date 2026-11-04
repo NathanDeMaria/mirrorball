@@ -52,6 +52,13 @@ things live where the template doesn't:
    the repo's `ci` fails until they're resolved. `make propagate DRY_RUN=1`
    shows the diffs first.
 
+## A package inside a bigger repo
+
+Render the template into the package's directory with `ci_workflow` off, so
+no `.github/workflows/ci.yml` lands where GitHub won't read it, and give the
+repo its own root workflow whose `ci` job gathers the packages. List it in
+`repos.txt` with the directory: `NathanDeMaria/EndGame py-endgame`.
+
 ## Adopting the template in an existing repo
 
 ```
