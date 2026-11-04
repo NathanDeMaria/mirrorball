@@ -11,12 +11,19 @@ template="$(cd "$(dirname "$0")/.." && pwd)"
 out="$(mktemp -d)"
 trap 'rm -rf "$out"' EXIT
 
-for kind in library app; do
+# `package` is a library inside a bigger repo: no workflow of its own, since
+# that repo's CI lives at its root.
+for kind in library app package; do
     dest="$out/demo-$kind"
     echo "::group::$kind"
+    ci=true; [ "$kind" = package ] && ci=false
     copier copy --defaults --quiet --vcs-ref HEAD \
-        --data project_name="demo-$kind" --data kind="$kind" \
+        --data project_name="demo-$kind" --data kind="${kind/package/library}" \
+        --data ci_workflow="$ci" \
         "$template" "$dest"
+    if [ "$ci" = false ] && [ -n "$(ls -A "$dest/.github/workflows" 2>/dev/null)" ]; then
+        echo "ci_workflow=false still rendered a workflow" >&2; exit 1
+    fi
     (
         cd "$dest"
         git init --quiet

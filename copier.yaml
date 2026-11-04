@@ -49,6 +49,13 @@ aws:
   help: Install the AWS CLI and mount ~/.aws into the devcontainer?
   default: true
 
+ci_workflow:
+  type: bool
+  help: >-
+    Include .github/workflows/ci.yml? Turn off for a package that lives in a
+    subdirectory of a bigger repo, whose CI has to be at the repo root.
+  default: true
+
 # The versions every repo shares. `when: false` keeps them out of the answers
 # file, so they always come from the template: bumping one here and tagging is
 # how a new Python, uv or ruff reaches every repo on its next `copier update`.
