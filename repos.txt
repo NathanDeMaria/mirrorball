@@ -7,3 +7,6 @@ NathanDeMaria/ten-minute-version
 NathanDeMaria/call-it-what-you-want
 NathanDeMaria/say-youll-remember-me
 NathanDeMaria/so-high-school
+NathanDeMaria/gold-rush
+NathanDeMaria/EndGame py-endgame
+NathanDeMaria/EndGame py-endgame-aws
