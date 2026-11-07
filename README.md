@@ -67,3 +67,22 @@ git diff   # put back anything repo-specific the template overwrote
 ```
 
 then add the repo to `repos.txt`.
+
+### Gotchas from the first dozen adoptions
+
+- **Keeping a Poetry lock's versions.** `uv lock` re-resolves; to move a repo
+  without changing a package, add every version from `poetry.lock` as a
+  temporary `constraint-dependencies`, lock, remove the constraints, lock
+  again, and check `uv lock --check` and the diff against the old lock.
+- **A git dependency's own `[tool.uv.sources]` apply to you.** uv reads them
+  when it resolves that dependency from a git checkout, so two repos that pin
+  the same package at different revs conflict ("conflicting URLs"). The
+  consumer's pin wins with `override-dependencies = ["that-package"]`
+  (bare name), and cassandra needs it for call-it-what-you-want.
+- **Metadata has bare names.** A wheel built by hatchling lists `endgame`, not
+  `endgame @ git+...`, which is what poetry-core wrote. A consumer that still
+  uses Poetry has to pin those itself.
+- **A pytest marker used by CI has to be registered** in every package it runs
+  against (`strict = true` rejects an unknown one named in `-m`).
+- **A package's image builds from its own `Dockerfile`**, not
+  `.devcontainer/Dockerfile`, which the template owns.
