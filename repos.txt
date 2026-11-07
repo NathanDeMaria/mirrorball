@@ -11,3 +11,4 @@ NathanDeMaria/gold-rush
 NathanDeMaria/EndGame py-endgame
 NathanDeMaria/EndGame py-endgame-aws
 NathanDeMaria/aws-batch-optimization batch-core
+NathanDeMaria/EndGame py-launcher
